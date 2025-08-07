@@ -28,7 +28,8 @@ public class Garaje {
 
     @OneToMany(mappedBy = "garaje",
                 cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE},
-                fetch = FetchType.EAGER) 
+                orphanRemoval = true,
+                fetch = FetchType.EAGER)
     private List<Coche> coches = new ArrayList<>();  
 
     public Garaje() {
@@ -84,7 +85,6 @@ public class Garaje {
         this.coches = coches;
     }
 
-   
     public boolean estaLleno() {
         return coches.size() >= capacidadMaxima;
     }

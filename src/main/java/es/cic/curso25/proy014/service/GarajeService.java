@@ -45,23 +45,7 @@ public class GarajeService {
     }
 
     public Garaje saveGaraje(Garaje garaje) {
-        /*
-         * IMPORTANTE: Gestión de relaciones bidireccionales
-         * -------------------------------------------------
-         * Antes de guardar un garaje (y sus coches/multas),
-         * es imprescindible asegurar que:
-         *   - Cada coche de la lista tiene correctamente asignado su garaje (coche.setGaraje(garaje))
-         *   - Cada multa de cada coche tiene correctamente asignado su coche (multa.setCoche(coche))
-         * Esto es necesario porque:
-         *   - Al recibir el JSON desde el cliente (o el test), las referencias pueden no estar bien enlazadas,
-         *     especialmente tras la deserialización con Jackson.
-         *   - JPA/Hibernate necesita que ambas partes de la relación estén sincronizadas para evitar errores de integridad,
-         *     duplicados o inconsistencias al guardar (por ejemplo, errores de clave primaria o listas vacías).
-         *   - Si solo se hace en el test o en el controlador, no se garantiza la consistencia en todos los casos de uso.
-         * Por eso, la lógica debe estar aquí, en el service, antes de guardar.
-         */
         LOGGER.info("Creación/actualización de garaje");
-        // Asegura la relación bidireccional Garaje-Coche y Coche-Multa
         if (garaje.getCoches() != null) {
             garaje.getCoches().forEach(coche -> {
                 coche.setGaraje(garaje);

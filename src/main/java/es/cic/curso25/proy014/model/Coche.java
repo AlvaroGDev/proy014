@@ -48,6 +48,15 @@ public class Coche {
     }
 
     // Getters and setters
+
+    public Long getId() {
+        return numPlaza;
+    }
+    
+    public void setId(Long id) {
+        this.numPlaza = id;
+    }
+
     public Long getNumPlaza() {
         return numPlaza;
     }
@@ -127,6 +136,6 @@ public class Coche {
     public String toString() {
         return "Coche [numPlaza=" + numPlaza + ", matricula=" + matricula + ", modelo=" + modelo + ", color=" + color
                 + ", garaje=" + garaje + "]";
-    } 
+    }
 
 }

@@ -5,7 +5,6 @@ import es.cic.curso25.proy014.service.GarajeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,24 +34,34 @@ public class GarajeController {
     }
 
     @PostMapping
-    public ResponseEntity<Garaje> createGaraje(@RequestBody Garaje garaje) {
+    public Garaje createGaraje(@RequestBody Garaje garaje) {
+
         LOGGER.info("Creando nuevo garaje");
-        Garaje creado = garajeService.saveGaraje(garaje);
-        return ResponseEntity.ok(creado);
+
+        Garaje garajeCreado = garajeService.saveGaraje(garaje);
+
+        return garajeCreado;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Garaje> updateGaraje(@PathVariable Long id, @RequestBody Garaje garaje) {
+
+    public Garaje updateGaraje(@PathVariable Long id, @RequestBody Garaje garaje) {
+
         LOGGER.info("Actualizando garaje con id {}", id);
+
         garaje.setId(id);
-        Garaje actualizado = garajeService.saveGaraje(garaje);
-        return ResponseEntity.ok(actualizado);
+
+        Garaje garajeActualizado = garajeService.saveGaraje(garaje);
+        return garajeActualizado;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGaraje(@PathVariable Long id) {
+     public void deleteGaraje(@PathVariable Long id) {
+
         LOGGER.info("Eliminando garaje con id {}", id);
+
         garajeService.deleteGaraje(id);
-        return ResponseEntity.noContent().build();
+        
+
     }
 }

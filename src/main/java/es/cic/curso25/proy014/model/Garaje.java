@@ -121,6 +121,7 @@ public class Garaje {
     public String toString() {
         return "Garaje [id=" + id + ", direccion=" + direccion + ", capacidadMaxima=" + capacidadMaxima + ", telefono="
                 + telefono + ", propietario=" + propietario + ", coches.size=" + (coches != null ? coches.size() : 0) + "]";
+                // Si coches NO es nulo, devuelve el tamaño de la lista coches, si no, devuelve 0
     }
 
     

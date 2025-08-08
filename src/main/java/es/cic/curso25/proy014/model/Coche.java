@@ -138,6 +138,7 @@ public class Coche {
     public String toString() {
         return "Coche [numPlaza=" + numPlaza + ", matricula=" + matricula + ", modelo=" + modelo + ", color=" + color
                 + ", garajeId=" + (garaje != null ? garaje.getId() : null) + "]";
+                // Si garaje NO es nulo, devuelve su id, en caso contrario, devuelve nulo
     }
 
 }

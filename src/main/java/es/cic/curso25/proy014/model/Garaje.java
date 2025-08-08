@@ -11,6 +11,8 @@ import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Garaje {
 
@@ -30,6 +32,7 @@ public class Garaje {
                 cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE},
                 orphanRemoval = true,
                 fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Coche> coches = new ArrayList<>();  
 
     public Garaje() {
@@ -117,7 +120,7 @@ public class Garaje {
     @Override
     public String toString() {
         return "Garaje [id=" + id + ", direccion=" + direccion + ", capacidadMaxima=" + capacidadMaxima + ", telefono="
-                + telefono + ", propietario=" + propietario + ", coches=" + coches + "]";
+                + telefono + ", propietario=" + propietario + ", coches.size=" + (coches != null ? coches.size() : 0) + "]";
     }
 
     

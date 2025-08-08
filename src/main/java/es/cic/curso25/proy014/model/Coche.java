@@ -2,7 +2,7 @@ package es.cic.curso25.proy014.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,6 +11,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
@@ -30,7 +31,8 @@ public class Coche {
     private String color;
 
     @ManyToOne
-    @JsonIgnore
+    @JoinColumn(name = "garaje_id")
+    @JsonBackReference
     private Garaje garaje;
 
     @OneToMany(mappedBy = "coche", 
@@ -135,7 +137,7 @@ public class Coche {
     @Override
     public String toString() {
         return "Coche [numPlaza=" + numPlaza + ", matricula=" + matricula + ", modelo=" + modelo + ", color=" + color
-                + ", garaje=" + garaje + "]";
+                + ", garajeId=" + (garaje != null ? garaje.getId() : null) + "]";
     }
 
 }

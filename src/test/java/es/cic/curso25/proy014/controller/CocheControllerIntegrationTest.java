@@ -211,13 +211,11 @@ public class CocheControllerIntegrationTest {
         LOGGER.info("Enviando PUT para actualizar el garaje con el nuevo coche");
 
         mockMvc.perform(put("/garajes/{id}", garaje.getId())
-
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(garaje)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.coches[-1:].matricula").value("TEST1234"))
-                .andExpect(jsonPath("$.coches[-1:].modelo").value("Test Modelo"))
-                .andExpect(jsonPath("$.coches[-1:].color").value("Azul"));
+                .andExpect(jsonPath("$.coches[?(@.matricula=='TEST1234')].modelo").value("Test Modelo"))
+                .andExpect(jsonPath("$.coches[?(@.matricula=='TEST1234')].color").value("Azul"));
 
         LOGGER.info("Verificando que el coche se ha guardado correctamente en la base de datos");
 
@@ -259,7 +257,7 @@ public class CocheControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(garaje)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.coches[0].multas[-1:].razonMulta").value("Multa test integración"));
+                .andExpect(jsonPath("$.coches[0].multas[?(@.razonMulta=='Multa test integración')].razonMulta").value("Multa test integración"));
         LOGGER.info("Verificando en base de datos que la multa se ha guardado correctamente");
 
         Coche cocheActualizado = cocheRepository.findById(1L).orElseThrow();
@@ -349,9 +347,8 @@ public class CocheControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(garaje)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.coches[-1:].matricula").value("NUEVO123"))
-                .andExpect(jsonPath("$.coches[-1:].modelo").value("Nuevo Modelo"))
-                .andExpect(jsonPath("$.coches[-1:].color").value("Verde"));
+                .andExpect(jsonPath("$.coches[?(@.matricula=='NUEVO123')].modelo").value("Nuevo Modelo"))
+                .andExpect(jsonPath("$.coches[?(@.matricula=='NUEVO123')].color").value("Verde"));
 
         LOGGER.info("Verificando que el coche se ha guardado correctamente en la base de datos");
 

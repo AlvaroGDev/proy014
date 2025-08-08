@@ -77,9 +77,20 @@ public class ClaseATest {
  * --------------------------------------------------
  * Garaje existe, pero no es una entidad, porque estamos en un unico garaje donde ocurre todo
  * Puedo multar múltiples veces
- * La multa se aplica en base a los días una vez se saca. Son 5e por día y son 4 días, serian 20e de multa.
+ * La multa se aplica en base a los días una vez se saca. Son 5e por día y son 4 días, serian 20e de multa. Los días los calculamos a lo bruto, al meter la multa metemos el número de días
+ * hacemos validaciones (no puede ser 0 ni menos de 0)
  * Al ser constante, podriamos tener el valor en el application.properties
  * 
  * Todo esto es lógica de servicio, son comprobaciones y cosas que se hacen en servicio
+ * NO ADMITIR MAS DE 5 COCHES POR PLAZA, comprobar al asignar
+ * 
+ * AL CLIENTE LO QUE MAS LE IMPORTA ES, POR ORDEN DE PRIORIDAD:
+ * ALTA DE VEHICULOS (CREAR COCHE)
+ * VINCULAR VEHICULOS A LA PLAZA (ESTACIONAMIENTO)
+ * Explicacion: UNA PLAZA TIENE MAXIMO 5 VEHICULOS ASIGNADOS, LUEGO PUEDEN O NO OCUPARLOS.
+ * Poder multar
+ * 
+ * Para poder multar primero debemos poder aparcar
+ * 
  * 
  */

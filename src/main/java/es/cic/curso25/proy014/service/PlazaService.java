@@ -1,3 +1,4 @@
+
 package es.cic.curso25.proy014.service;
 
 import java.util.List;
@@ -18,8 +19,7 @@ public class PlazaService {
     @Autowired
     private PlazaRepository plazaRepository;
 
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlazaService.class); // Por si se usa en el futuro
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlazaService.class);
 
     public List<Plaza> getAllPlazas() {
         LOGGER.info("Obteniendo todas las plazas desde la base de datos");
@@ -31,16 +31,21 @@ public class PlazaService {
         return plazaRepository.findById(id);
     }
 
-
     public Plaza createPlaza(Plaza plaza) {
         LOGGER.info("Creación/actualización de plaza");
         return plazaRepository.save(plaza);
     }
 
-    public void deletePlaza(Long id) {
-        LOGGER.info("Eliminando garaje con id {}", id);
-        plazaRepository.deleteById(id);
+    public Plaza updatePlaza(Plaza plazaActualizada) {
+        LOGGER.info("Actualizando plaza con id {}", plazaActualizada.getClass());
+
+        return plazaRepository.save(plazaActualizada);
+
     }
 
+    public void deletePlaza(Long id) {
+        LOGGER.info("Eliminando plaza con id {}", id);
+        plazaRepository.deleteById(id);
+    }
 
 }

@@ -24,17 +24,17 @@ public class Multa {
 
     @ManyToOne
     @JsonIgnore
-    private Coche coche; // Relación con el coche
+    private Vehiculo vehiculo; // Relación con el coche
 
     // Constructores
     public Multa() {
     }
 
-    public Multa(String razonMulta, double importe, String fecha, Coche coche) {
+    public Multa(String razonMulta, double importe, String fecha, Vehiculo vehiculo) {
         this.razonMulta = razonMulta;
         this.importe = importe;
         this.fecha = fecha;
-        this.coche = coche;
+        this.vehiculo = vehiculo;
     }
 
     // Getters y setters
@@ -70,11 +70,11 @@ public class Multa {
         this.fecha = fecha;
     }
 
-    public Coche getCoche() {
-        return coche;
+    public Vehiculo getVehiculo() {
+        return vehiculo;
     }
 
-    public void setCoche(Coche coche) {
-        this.coche = coche;
+    public void setCoche(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
     }
 }

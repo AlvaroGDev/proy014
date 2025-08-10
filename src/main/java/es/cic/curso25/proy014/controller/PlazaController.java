@@ -39,7 +39,7 @@ public class PlazaController {
 
         LOGGER.info("Creando nueva plaza");
 
-        if(plaza.getNumPlaza() != null )
+        if(plaza.getId() != null )
             throw new SecurityException("Para crear una plaza, el id debe ser nulo");
         
         if(!plaza.haySitio())
@@ -51,19 +51,19 @@ public class PlazaController {
     @PutMapping("/{id}")
     public Plaza updatePlaza(@PathVariable Long numPlaza, @RequestBody Plaza plazaModificada) {
 
-        if(plazaModificada.getNumPlaza() == null || !plazaModificada.getNumPlaza().equals(numPlaza)){
+        if(plazaModificada.getId() == null || !plazaModificada.getId().equals(numPlaza)){
             throw new SecurityException("Para actualizar una plaza, el id debe coincidir con el del objeto enviado y no ser nulo");
               // Verificamos que el id no es nulo y que además coincide con el id del objeto enviado
         }
 	else {
-          LOGGER.info("Actualizando plaza con id {}", plazaModificada.getNumPlaza());
+          LOGGER.info("Actualizando plaza con id {}", plazaModificada.getId());
 		if(plazaService.getPlaza(numPlaza).isEmpty())
 			throw new SecurityException("Plaza con id " + numPlaza + " no encontrada");
 		// Miro que la plaza existe
 
 		Plaza miPlaza = plazaService.getPlaza(numPlaza).get();
         // Ahora que se que existe, me la guardo
-        LOGGER.info("Actualizando plaza con id {}", miPlaza.getNumPlaza());
+        LOGGER.info("Actualizando plaza con id {}", miPlaza.getId());
 
         if(plazaModificada.getSector() != null)
           miPlaza.setSector(plazaModificada.getSector());

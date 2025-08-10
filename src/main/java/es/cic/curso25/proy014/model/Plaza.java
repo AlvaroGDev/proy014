@@ -9,6 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
+@Table(name = "plaza")
 public class Plaza {
 
     public enum Sector {
@@ -24,9 +27,9 @@ public class Plaza {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long numPlaza;
+    private Long id;
 
-    @Column(name = "maximo_plazas", columnDefinition = "bigint default 150") // Ponemos que por defecto seran 150 plazas
+       // Ponemos que por defecto seran 150 plazas
     private Long maximoPlazas;
 
     @Enumerated(EnumType.STRING)
@@ -37,18 +40,19 @@ public class Plaza {
     @JsonManagedReference
     private List<Vehiculo> vehiculos = new ArrayList<>(5);
 
+    @Transient 
     private final Long MAX_VEHICULOS_POR_PLAZA = 5L;
 
     public Plaza() {
 
     }
 
-    public Long getNumPlaza() {
-        return numPlaza;
+    public Long getId() {
+        return id;
     }
 
-    public void setNumPlaza(Long numPlaza) {
-        this.numPlaza = numPlaza;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     // No hay setMaximoPlazas para que no lo puedan modificar
@@ -96,7 +100,7 @@ public class Plaza {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((numPlaza == null) ? 0 : numPlaza.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
 
@@ -109,10 +113,10 @@ public class Plaza {
         if (getClass() != obj.getClass())
             return false;
         Plaza other = (Plaza) obj;
-        if (numPlaza == null) {
-            if (other.numPlaza != null)
+        if (id == null) {
+            if (other.id != null)
                 return false;
-        } else if (!numPlaza.equals(other.numPlaza))
+        } else if (!id.equals(other.id))
             return false;
         return true;
     }

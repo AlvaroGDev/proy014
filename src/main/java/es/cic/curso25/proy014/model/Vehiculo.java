@@ -31,7 +31,7 @@ public class Vehiculo {
     private String color;
 
     @ManyToOne
-    @JoinColumn(name = "num_plaza")
+    @JoinColumn(name = "plaza_id")
     @JsonBackReference
     private Plaza plaza;
 
@@ -134,7 +134,7 @@ public class Vehiculo {
     @Override
     public String toString() {
         return "Coche [numPlaza=" + id + ", matricula=" + matricula + ", modelo=" + modelo + ", color=" + color
-                + ", garajeId=" + (plaza != null ? plaza.getNumPlaza() : null) + "]";
+                + ", garajeId=" + (plaza != null ? plaza.getId() : null) + "]";
                 // Si garaje NO es nulo, devuelve su id, en caso contrario, devuelve nulo
     }
 

@@ -78,6 +78,9 @@ public class VehiculoController {
 	
         return vehiculoService.updateVehiculo(mVehiculo);
 	}
+
+	
+
 	}
 
 	@DeleteMapping("/{id}")

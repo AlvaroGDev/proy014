@@ -29,8 +29,8 @@ public class Plaza {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-       // Ponemos que por defecto seran 150 plazas
-    private Long maximoPlazas;
+      
+
 
     @Enumerated(EnumType.STRING)
     private Sector sector;
@@ -40,8 +40,15 @@ public class Plaza {
     @JsonManagedReference
     private List<Vehiculo> vehiculos = new ArrayList<>(5);
 
+    // Ponemos que por defecto seran 150 plazas
+    private Long maximoPlazas; // Esto son el numero máximo de instancias de plazas 
+
     @Transient 
     private final Long MAX_VEHICULOS_POR_PLAZA = 5L;
+    // Esto indica el número maximo de vehiculos por plaza
+
+
+    Boolean ocupada = false;
 
     public Plaza() {
 
@@ -83,7 +90,6 @@ public class Plaza {
     }
 
     public boolean agregarVehiculo (Vehiculo vehiculo) throws SecurityException {
-
         if (!haySitio()) // Si no hay sitio, lanza una excepción
             throw new SecurityException("Error: no puedes añadir más coches, el garaje está lleno");
 
@@ -93,8 +99,13 @@ public class Plaza {
         vehiculos.add(vehiculo);
         vehiculo.setPlaza(this);
         return true;
-
     }
+
+    public void estacionarVehiculo () {
+        this.ocupada = true;
+    }
+
+
 
     @Override
     public int hashCode() {

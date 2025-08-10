@@ -82,5 +82,10 @@ public class PlazaController {
         plazaService.deletePlaza(id);
     }
 
+    @PostMapping("/{idPlaza}/aparcarVehiculo")
+    public void aparcaVehiculo(@PathVariable Long idPlaza, @RequestBody Vehiculo vehiculo) {
+        
+        LOGGER.info("Aparcando vehiculo en plaza con id {}", idPlaza);
 
+}
 }

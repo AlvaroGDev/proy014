@@ -2,11 +2,11 @@ package es.cic.curso25.proy014.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.cic.curso25.proy014.model.Coche;
-import es.cic.curso25.proy014.model.Garaje;
+import es.cic.curso25.proy014.model.Vehiculo;
+import es.cic.curso25.proy014.model.Plaza;
 import es.cic.curso25.proy014.model.Multa;
 import es.cic.curso25.proy014.repository.CocheRepository;
-import es.cic.curso25.proy014.repository.GarajeRepository;
+import es.cic.curso25.proy014.repository.PlazaRepository;
 import es.cic.curso25.proy014.repository.MultaRepository;
 
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ public class CocheControllerIntegrationTest {
     private CocheRepository cocheRepository;
 
     @Autowired
-    private GarajeRepository garajeRepository;
+    private PlazaRepository garajeRepository;
 
     @Autowired
     private MultaRepository multaRepository;
@@ -73,12 +73,8 @@ public class CocheControllerIntegrationTest {
         LOGGER.info("[TEST] Iniciando testCrearGaraje");
         LOGGER.info("Creando objeto Garaje");
 
-        Garaje garaje = new Garaje();
+        Plaza garaje = new Plaza();
 
-        garaje.setDireccion("Nueva Calle 123");
-        garaje.setCapacidadMaxima(5L);
-        garaje.setTelefono("600333333");
-        garaje.setPropietario("Carlos Test");
 
         LOGGER.info("Enviando POST para crear garaje: " + garaje.toString());
 
@@ -97,17 +93,13 @@ public class CocheControllerIntegrationTest {
         LOGGER.info("[TEST] Iniciando testModificarGaraje");
         LOGGER.info("Leyendo garaje con id 1");
 
-        Optional<Garaje> garajeExistente = garajeRepository.findById(1L);
+        Optional<Plaza> garajeExistente = garajeRepository.findById(1L);
         Long idGaraje;
-        Garaje garaje = new Garaje();
+        Plaza garaje = new Plaza();
 
-        garaje.setDireccion("Calle Modificada");
-        garaje.setCapacidadMaxima(7L);
-        garaje.setTelefono("600444444");
-
-        garaje.setPropietario("Modificado");
+      
         if (garajeExistente.isPresent())
-            idGaraje = garajeExistente.get().getId();
+            idGaraje = garajeExistente.get().getNumPlaza();
         else
             throw new SecurityException("Error: no se encontró el garaje con ese id");
 
@@ -130,7 +122,7 @@ public class CocheControllerIntegrationTest {
 
         mockMvc.perform(delete("/garajes/1"))
                 .andExpect(resultado -> {
-                    Optional<Garaje> garaje = garajeRepository.findById(1L);
+                    Optional<Plaza> garaje = garajeRepository.findById(1L);
                     assertTrue(garaje.isEmpty(), "Error: no se ha borrado correctamente el garaje");
                 });
 
@@ -145,12 +137,12 @@ public class CocheControllerIntegrationTest {
         LOGGER.info("[TEST] Iniciando testModificarCoche");
         LOGGER.info("Leyendo garaje con id 1");
 
-        Optional<Garaje> garajeExistente = garajeRepository.findById(1L);
-        Garaje garaje = garajeExistente.get();
+        Optional<Plaza> garajeExistente = garajeRepository.findById(1L);
+        Plaza garaje = garajeExistente.get();
 
         LOGGER.info("Buscando coche con id 2 en el garaje");
 
-        Coche cocheExistente = garaje.getCoches().stream()
+        Vehiculo cocheExistente = garaje.getCoches().stream()
                 .filter(coche -> coche.getId().equals(2L))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(
@@ -163,14 +155,14 @@ public class CocheControllerIntegrationTest {
 
         LOGGER.info("Enviando PUT para actualizar el garaje");
 
-        mockMvc.perform(put("/garajes/{id}", garaje.getId())
+        mockMvc.perform(put("/garajes/{id}", garaje.getNumPlaza())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(garaje)))
                 .andExpect(status().isOk())
                 .andExpect(resultado -> {
                     String jsonResponse = resultado.getResponse().getContentAsString();
-                    Garaje garajeVerificado = objectMapper.readValue(jsonResponse, Garaje.class);
-                    Coche cocheModificadoRecuperado = garajeVerificado.getCoches().stream()
+                    Plaza garajeVerificado = objectMapper.readValue(jsonResponse, Plaza.class);
+                    Vehiculo cocheModificadoRecuperado = garajeVerificado.getCoches().stream()
                             .filter(coche -> coche.getId().equals(2L))
                             .findFirst()
                             .orElseThrow(() -> new IllegalArgumentException(
@@ -181,7 +173,7 @@ public class CocheControllerIntegrationTest {
 
         LOGGER.info("Verificando en base de datos");
 
-        Coche verificoCoche = cocheRepository.findById(2L).get();
+        Vehiculo verificoCoche = cocheRepository.findById(2L).get();
         assertEquals("1234ABC", verificoCoche.getMatricula());
         assertEquals("Toyota testing", verificoCoche.getModelo());
 
@@ -194,10 +186,10 @@ public class CocheControllerIntegrationTest {
         LOGGER.info("[TEST] Iniciando testCrearCocheEnGaraje");
         LOGGER.info("Leyendo garaje con id 2");
 
-        Garaje garaje = garajeRepository.findById(2L).orElseThrow(() -> new RuntimeException("No existe el garaje 2"));
+        Plaza garaje = garajeRepository.findById(2L).orElseThrow(() -> new RuntimeException("No existe el garaje 2"));
         
         LOGGER.info("Creando nuevo coche para añadir al garaje "+ garaje.toString());
-        Coche coche = new Coche();
+        Vehiculo coche = new Vehiculo();
 
         coche.setMatricula("TEST1234");
         coche.setModelo("Test Modelo");
@@ -210,7 +202,7 @@ public class CocheControllerIntegrationTest {
 
         LOGGER.info("Enviando PUT para actualizar el garaje con el nuevo coche");
 
-        mockMvc.perform(put("/garajes/{id}", garaje.getId())
+        mockMvc.perform(put("/garajes/{id}", garaje.getNumPlaza())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(garaje)))
                 .andExpect(status().isOk())
@@ -220,7 +212,7 @@ public class CocheControllerIntegrationTest {
         LOGGER.info("Verificando que el coche se ha guardado correctamente en la base de datos");
 
         boolean existe = cocheRepository.findAll().stream()
-                .anyMatch(cocheTest -> "TEST1234".equals(cocheTest.getMatricula()) && cocheTest.getGaraje().getId().equals(2L));
+                .anyMatch(cocheTest -> "TEST1234".equals(cocheTest.getMatricula()) && cocheTest.getGaraje().getNumPlaza().equals(2L));
         
             assertTrue(existe, "El coche no se ha guardado correctamente en el garaje 2");
 
@@ -233,11 +225,11 @@ public class CocheControllerIntegrationTest {
         LOGGER.info("[TEST] Iniciando testAgregarMultaACocheDesdeGaraje");
         LOGGER.info("Leyendo garaje con id 1");
 
-        Garaje garaje = garajeRepository.findById(1L).orElseThrow(() -> new RuntimeException("No existe el garaje 1"));
+        Plaza garaje = garajeRepository.findById(1L).orElseThrow(() -> new RuntimeException("No existe el garaje 1"));
        
         LOGGER.info("Buscando coche con numPlaza 1 en el garaje");
         
-        Coche coche = garaje.getCoches().stream()
+        Vehiculo coche = garaje.getCoches().stream()
                 .filter(c -> c.getNumPlaza().equals(1L))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No existe el coche 1 en el garaje 1"));
@@ -253,14 +245,14 @@ public class CocheControllerIntegrationTest {
 
         LOGGER.info("Enviando PUT para actualizar el garaje con la nueva multa: " + nuevaMulta.toString());
 
-        mockMvc.perform(put("/garajes/{id}", garaje.getId())
+        mockMvc.perform(put("/garajes/{id}", garaje.getNumPlaza())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(garaje)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.coches[0].multas[?(@.razonMulta=='Multa test integración')].razonMulta").value("Multa test integración"));
         LOGGER.info("Verificando en base de datos que la multa se ha guardado correctamente");
 
-        Coche cocheActualizado = cocheRepository.findById(1L).orElseThrow();
+        Vehiculo cocheActualizado = cocheRepository.findById(1L).orElseThrow();
         boolean multaEnCoche = cocheActualizado.getMultas().stream()
                               .anyMatch(m -> "Multa test integración".equals(m.getRazonMulta()));
 
@@ -275,11 +267,11 @@ public class CocheControllerIntegrationTest {
         LOGGER.info("[TEST] Iniciando testModificarMulta");
         LOGGER.info("Leyendo garaje con id 1");
 
-        Garaje garaje = garajeRepository.findById(1L).orElseThrow(() -> new RuntimeException("No existe el garaje 1"));
+        Plaza garaje = garajeRepository.findById(1L).orElseThrow(() -> new RuntimeException("No existe el garaje 1"));
         
         LOGGER.info("Buscando coche con numPlaza 1 en el garaje");
 
-        Coche coche = garaje.getCoches().stream()
+        Vehiculo coche = garaje.getCoches().stream()
                 .filter(c -> c.getNumPlaza().equals(1L))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No existe el coche 1 en el garaje 1"));
@@ -295,13 +287,13 @@ public class CocheControllerIntegrationTest {
 
         LOGGER.info("Enviando PUT para actualizar el garaje con la multa modificada");
 
-        mockMvc.perform(put("/garajes/{id}", garaje.getId())
+        mockMvc.perform(put("/garajes/{id}", garaje.getNumPlaza())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(garaje)))
                 .andExpect(status().isOk())
                 .andExpect(resultado -> {
                     String jsonResponse = resultado.getResponse().getContentAsString();
-                    Garaje garajeVerificado = objectMapper.readValue(jsonResponse, Garaje.class);
+                    Plaza garajeVerificado = objectMapper.readValue(jsonResponse, Plaza.class);
                     Multa multaVerificada = garajeVerificado.getCoches().get(0).getMultas().get(0);
                     assertEquals("Multa modificada", multaVerificada.getRazonMulta());
                     assertEquals(123.45, multaVerificada.getImporte());
@@ -326,11 +318,11 @@ public class CocheControllerIntegrationTest {
         LOGGER.info("Leyendo garaje con id 1");
 
         
-        Garaje garaje = garajeRepository.findById(1L).orElseThrow(() -> new RuntimeException("No existe el garaje 1"));
+        Plaza garaje = garajeRepository.findById(1L).orElseThrow(() -> new RuntimeException("No existe el garaje 1"));
         
         LOGGER.info("Creando nuevo coche para añadir al garaje " + garaje.toString());
 
-        Coche coche = new Coche();
+        Vehiculo coche = new Vehiculo();
 
         coche.setMatricula("NUEVO123");
         coche.setModelo("Nuevo Modelo");
@@ -343,7 +335,7 @@ public class CocheControllerIntegrationTest {
 
         LOGGER.info("Enviando PUT para actualizar el garaje con el nuevo coche");
 
-        mockMvc.perform(put("/garajes/{id}", garaje.getId())
+        mockMvc.perform(put("/garajes/{id}", garaje.getNumPlaza())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(garaje)))
                 .andExpect(status().isOk())
@@ -353,7 +345,7 @@ public class CocheControllerIntegrationTest {
         LOGGER.info("Verificando que el coche se ha guardado correctamente en la base de datos");
 
         boolean existe = cocheRepository.findAll().stream()
-                .anyMatch(cocheTest -> "NUEVO123".equals(cocheTest.getMatricula()) && cocheTest.getGaraje().getId().equals(1L));
+                .anyMatch(cocheTest -> "NUEVO123".equals(cocheTest.getMatricula()) && cocheTest.getGaraje().getNumPlaza().equals(1L));
        
         assertTrue(existe, "El coche no se ha guardado correctamente en el garaje 1");
         
@@ -366,11 +358,11 @@ public class CocheControllerIntegrationTest {
         LOGGER.info("[TEST] Iniciando testModificarMultaEnCoche");
         LOGGER.info("Leyendo garaje con id 2");
 
-        Garaje garaje = garajeRepository.findById(2L).orElseThrow(() -> new RuntimeException("No existe el garaje 2"));
+        Plaza garaje = garajeRepository.findById(2L).orElseThrow(() -> new RuntimeException("No existe el garaje 2"));
         
         LOGGER.info("Buscando coche con numPlaza 8 en el garaje");
         
-        Coche coche = garaje.getCoches().stream()
+        Vehiculo coche = garaje.getCoches().stream()
                 .filter(c -> c.getNumPlaza().equals(8L))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No existe el coche 8 en el garaje 2"));
@@ -390,16 +382,16 @@ public class CocheControllerIntegrationTest {
 
         LOGGER.info("Enviando PUT para actualizar el garaje con la multa modificada");
 
-        mockMvc.perform(put("/garajes/{id}", garaje.getId())
+        mockMvc.perform(put("/garajes/{id}", garaje.getNumPlaza())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(garaje)))
                 .andExpect(status().isOk())
                 .andExpect(resultado -> {
 
                     String jsonResponse = resultado.getResponse().getContentAsString();
-                    Garaje garajeVerificado = objectMapper.readValue(jsonResponse, Garaje.class);
+                    Plaza garajeVerificado = objectMapper.readValue(jsonResponse, Plaza.class);
                     
-                    Coche cocheVerificado = garajeVerificado.getCoches().stream()
+                    Vehiculo cocheVerificado = garajeVerificado.getCoches().stream()
                         .filter(c -> c.getNumPlaza().equals(8L))
                         .findFirst()
                         .orElseThrow(() -> new RuntimeException("No se encontró el coche 8 en el garaje 2 (respuesta)"));

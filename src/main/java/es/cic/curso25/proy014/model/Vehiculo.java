@@ -18,54 +18,47 @@ import jakarta.persistence.OneToMany;
 
 
 @Entity
-public class Coche {
+public class Vehiculo {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "num_plaza")
-    private Long numPlaza;
+    @Column
+    private Long id;
 
     private String matricula;
     private String modelo;
     private String color;
 
     @ManyToOne
-    @JoinColumn(name = "garaje_id")
+    @JoinColumn(name = "num_plaza")
     @JsonBackReference
-    private Garaje garaje;
+    private Plaza plaza;
 
-    @OneToMany(mappedBy = "coche", 
+    @OneToMany(mappedBy = "vehiculo", 
     cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE},
                 fetch = FetchType.EAGER)  // Relación inversa en Multa
     private List<Multa> multas;  // Lista de multas asociadas a este coche
     
-    public Coche() {}
+    public Vehiculo() {}
 
-    public Coche(String matricula, String modelo, String color, Garaje garaje) {
+    public Vehiculo(String matricula, String modelo, String color, Plaza plaza) {
         this.matricula = matricula;
         this.modelo = modelo;
         this.color = color;
-        this.garaje = garaje;
+        this.plaza = plaza;
     }
 
     // Getters and setters
 
     public Long getId() {
-        return numPlaza;
+        return id;
     }
     
     public void setId(Long id) {
-        this.numPlaza = id;
+        this.id = id;
     }
 
-    public Long getNumPlaza() {
-        return numPlaza;
-    }
-
-    public void setNumPlaza(Long numPlaza) {
-        this.numPlaza = numPlaza;
-    }
 
     public String getMatricula() {
         return matricula;
@@ -91,12 +84,16 @@ public class Coche {
         this.color = color;
     }
 
-    public Garaje getGaraje() {
-        return garaje;
+    public Plaza getPlaza() {
+        return plaza;
     }
 
-    public void setGaraje(Garaje garaje) {
-        this.garaje = garaje;
+    public void setPlaza(Plaza plaza) {
+        this.plaza = plaza;
+    }
+
+    public void setGaraje(Plaza plaza) {
+        this.plaza = plaza;
     }
 
     public List<Multa> getMultas() {
@@ -113,7 +110,7 @@ public class Coche {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((numPlaza == null) ? 0 : numPlaza.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
 
@@ -125,19 +122,19 @@ public class Coche {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Coche other = (Coche) obj;
-        if (numPlaza == null) {
-            if (other.numPlaza != null)
+        Vehiculo other = (Vehiculo) obj;
+        if (id == null) {
+            if (other.id != null)
                 return false;
-        } else if (!numPlaza.equals(other.numPlaza))
+        } else if (!id.equals(other.id))
             return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "Coche [numPlaza=" + numPlaza + ", matricula=" + matricula + ", modelo=" + modelo + ", color=" + color
-                + ", garajeId=" + (garaje != null ? garaje.getId() : null) + "]";
+        return "Coche [numPlaza=" + id + ", matricula=" + matricula + ", modelo=" + modelo + ", color=" + color
+                + ", garajeId=" + (plaza != null ? plaza.getNumPlaza() : null) + "]";
                 // Si garaje NO es nulo, devuelve su id, en caso contrario, devuelve nulo
     }
 

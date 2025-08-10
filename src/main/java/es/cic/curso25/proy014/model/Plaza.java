@@ -26,11 +26,8 @@ public class Plaza {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-      
-
 
     @Enumerated(EnumType.STRING)
     private Sector sector;
@@ -47,8 +44,10 @@ public class Plaza {
     private final Long MAX_VEHICULOS_POR_PLAZA = 5L;
     // Esto indica el número maximo de vehiculos por plaza
 
+    @Column(name = "ocupada", columnDefinition = "boolean default false")
+    private boolean ocupada = false;
 
-    Boolean ocupada = false;
+ 
 
     public Plaza() {
 
@@ -101,10 +100,19 @@ public class Plaza {
         return true;
     }
 
-    public void estacionarVehiculo () {
-        this.ocupada = true;
-    }
+    public void estacionarVehiculo(Vehiculo vehiculoAEstacionar) {
 
+        if(!this.ocupada){ // Si la plaza no está ocupada
+            if(!vehiculoAEstacionar.getAparcado()){ // Si el vehiculo no está aparcado
+                if(vehiculoAEstacionar.getPlaza().getId() == this.getId()){ // Revisamos que el vehiculo pertenece a la plaza, si no, lo multamos
+                    this.ocupada = true;
+            } else {
+                vehiculoAEstacionar.getMultas().add(new Multa());
+                this.ocupada = false;
+            }
+        }
+    }
+}
 
 
     @Override

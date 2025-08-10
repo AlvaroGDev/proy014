@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 
 
 
@@ -22,13 +23,16 @@ public class Vehiculo {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long id;
 
     private String matricula;
     private String modelo;
     private String color;
+
+    @Column(name = "aparcado", columnDefinition = "boolean default false")
+    private boolean aparcado = false; 
 
     @ManyToOne
     @JoinColumn(name = "plaza_id")
@@ -105,6 +109,14 @@ public class Vehiculo {
     }
 
     
+    public Boolean getAparcado() {
+        return aparcado;
+    }
+
+    public void setAparcado(Boolean aparcado) {
+        this.aparcado = aparcado;
+    }
+
 
     @Override
     public int hashCode() {
@@ -137,5 +149,6 @@ public class Vehiculo {
                 + ", garajeId=" + (plaza != null ? plaza.getId() : null) + "]";
                 // Si garaje NO es nulo, devuelve su id, en caso contrario, devuelve nulo
     }
+
 
 }

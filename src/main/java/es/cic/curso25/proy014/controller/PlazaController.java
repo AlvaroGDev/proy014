@@ -3,9 +3,12 @@ package es.cic.curso25.proy014.controller;
 import es.cic.curso25.proy014.model.Plaza;
 import es.cic.curso25.proy014.model.Vehiculo;
 import es.cic.curso25.proy014.service.PlazaService;
+import es.cic.curso25.proy014.service.VehiculoService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +22,9 @@ public class PlazaController {
 
     @Autowired
     private PlazaService plazaService;
+
+    @Autowired
+    private VehiculoService vehiculoService;
 
     @GetMapping
     public List<Plaza> getAllPlazas() {
@@ -82,10 +88,49 @@ public class PlazaController {
         plazaService.deletePlaza(id);
     }
 
-    @PostMapping("/{idPlaza}/aparcarVehiculo")
+    @PostMapping("/{idPlaza}/agregarvehiculo")
+    public Plaza agregarVehiculo(@PathVariable Long idPlaza, @RequestBody Vehiculo vehiculo) {
+       if (vehiculo.getId() != null) 
+            throw new SecurityException("No se ha encontrado el vehiculo con id " + vehiculo.getId() + ".");
+
+        if(plazaService.getPlaza(idPlaza).isEmpty())
+            throw new SecurityException("Error: Plaza con id " + idPlaza + " no encontrada");
+
+        LOGGER.info("Agregando vehiculo a plaza con id {}", idPlaza);
+
+        Plaza plaza = plazaService.getPlaza(idPlaza).get();
+
+        plaza.agregarVehiculo(vehiculo);
+        plazaService.updatePlaza(plaza);
+        vehiculoService.createVehiculo(vehiculo);
+
+        LOGGER.info("Vehiculo agregado a plaza con id {}", idPlaza);
+
+        return plaza;
+}
+
+    @Transactional
+    @PostMapping("/{idPlaza}/aparcarvehiculo")
     public void aparcaVehiculo(@PathVariable Long idPlaza, @RequestBody Vehiculo vehiculo) {
         
-        LOGGER.info("Aparcando vehiculo en plaza con id {}", idPlaza);
+        if (vehiculo.getId() != null && vehiculoService.getVehiculo(vehiculo.getId()).isEmpty()) 
+            throw new SecurityException("No se ha encontrado el vehiculo con id " + vehiculo.getId() + ".");
 
+        if(plazaService.getPlaza(idPlaza).isEmpty())
+            throw new SecurityException("Error: Plaza con id " + idPlaza + " no encontrada");
+
+        LOGGER.info("Aparcando vehiculo en plaza con id {}", idPlaza);
+        Plaza plaza = plazaService.getPlaza(idPlaza).get();
+
+        vehiculo.setPlaza(plaza);
+        vehiculo.setAparcado(true);
+        
+        
+        plaza.getVehiculos().add(vehiculo);
+        //plaza.estacionarVehiculo(vehiculo);
+
+        plazaService.updatePlaza(plaza);
+        vehiculoService.updateVehiculo(vehiculo);
+       
 }
 }

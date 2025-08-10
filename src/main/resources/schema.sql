@@ -3,6 +3,7 @@ CREATE TABLE plaza (
     id BIGSERIAL PRIMARY KEY,
     maximo_plazas BIGINT,
     sector VARCHAR(10),
+    ocupada BOOLEAN DEFAULT FALSE,
     direccion VARCHAR(255)
 );
 
@@ -12,6 +13,7 @@ CREATE TABLE vehiculo (
     matricula VARCHAR(20),
     modelo VARCHAR(100),
     color VARCHAR(50),
+    aparcado BOOLEAN DEFAULT FALSE,
     plaza_id BIGINT REFERENCES plaza(id)
 );
 

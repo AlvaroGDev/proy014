@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.cic.curso25.proy014.model.Plaza;
+
 import es.cic.curso25.proy014.model.Vehiculo;
 import es.cic.curso25.proy014.repository.VehiculoRepository;
 import org.slf4j.Logger;

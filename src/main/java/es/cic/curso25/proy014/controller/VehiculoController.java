@@ -1,6 +1,5 @@
 package es.cic.curso25.proy014.controller;
 
-import es.cic.curso25.proy014.model.Plaza;
 import es.cic.curso25.proy014.model.Vehiculo;
 import es.cic.curso25.proy014.service.PlazaService;
 import es.cic.curso25.proy014.service.VehiculoService;

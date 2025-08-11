@@ -92,7 +92,7 @@ public class Plaza {
         if (!haySitio()) // Si no hay sitio, lanza una excepción
             throw new SecurityException("Error: no puedes añadir más coches, el garaje está lleno");
 
-        if(this.getVehiculos().size() >= MAX_VEHICULOS_POR_PLAZA)     // Si la lista de vehiculos es mayor o igual a 5, lanza una excepción
+        if(this.getVehiculos().size() >= MAX_VEHICULOS_POR_PLAZA) // Si la lista de vehiculos es mayor o igual a 5, lanza una excepción
             throw new SecurityException("Error: no puedes añadir más coches a la plaza, esta llena");
 
         vehiculos.add(vehiculo);
